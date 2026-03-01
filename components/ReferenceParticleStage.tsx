@@ -29,6 +29,10 @@ export function ReferenceParticleStage() {
       maskSrc: "/images/face-mask.png"
     });
 
+    requestAnimationFrame(() => {
+      window.dispatchEvent(new Event("resize"));
+    });
+
     destroyRef.current = mounted.destroy;
 
     return () => {
