@@ -147,6 +147,7 @@ export function mountReferenceEngine(opts: ReferenceEngineOptions) {
   if (!three) {
     throw new Error("THREE r72 is required before mounting the reference engine.");
   }
+  const THREE = three;
 
   const { container, canvasMain, canvasStars, imageSrc, maskSrc } = opts;
 
@@ -242,10 +243,11 @@ export function mountReferenceEngine(opts: ReferenceEngineOptions) {
   }
 
   function createPhotoPoint(x: number, y: number) {
-    const baseX = x / IMAGE_SAMPLE_SCALE - PORTRAIT_CANVAS_WIDTH / 2 + (500 - 440 * 0.5);
+    const HERO_OFFSET_X = -260;
+    const baseX = x / IMAGE_SAMPLE_SCALE - PORTRAIT_CANVAS_WIDTH / 2 + (HERO_OFFSET_X - 440 * 0.5);
     const baseY = -(y / IMAGE_SAMPLE_SCALE) + PORTRAIT_CANVAS_HEIGHT / 2;
     const baseZ = -Math.random() * 500;
-    const vertex = new three.Vector3(baseX, baseY, baseZ) as PhotoVertex;
+    const vertex = new THREE.Vector3(baseX, baseY, baseZ) as PhotoVertex;
     vertex.baseX = baseX;
     vertex.baseY = baseY;
     vertex.baseZ = baseZ;
@@ -258,8 +260,8 @@ export function mountReferenceEngine(opts: ReferenceEngineOptions) {
       return;
     }
 
-    const geometry = new three.Geometry();
-    const material = new three.PointCloudMaterial();
+    const geometry = new THREE.Geometry();
+    const material = new THREE.PointCloudMaterial();
     material.vertexColors = true;
     material.transparent = true;
     material.opacity = 0.98;
@@ -274,13 +276,13 @@ export function mountReferenceEngine(opts: ReferenceEngineOptions) {
           const vertex = createPhotoPoint(x, y);
           const pixelColor = getPixel(imageData, x, y);
           const color = `rgb(${pixelColor.r}, ${pixelColor.g}, ${pixelColor.b})`;
-          geometry.colors.push(new three.Color(color));
+          geometry.colors.push(new THREE.Color(color));
           geometry.vertices.push(vertex);
         }
       }
     }
 
-    particles = new three.Points(geometry, material);
+    particles = new THREE.Points(geometry, material);
     scene.add(particles);
   }
 
@@ -289,8 +291,8 @@ export function mountReferenceEngine(opts: ReferenceEngineOptions) {
       return;
     }
 
-    const geometry = new three.Geometry();
-    const material = new three.PointCloudMaterial();
+    const geometry = new THREE.Geometry();
+    const material = new THREE.PointCloudMaterial();
     material.vertexColors = true;
     material.transparent = true;
     material.opacity = 0.18;
@@ -316,7 +318,7 @@ export function mountReferenceEngine(opts: ReferenceEngineOptions) {
         const baseX = x / IMAGE_SAMPLE_SCALE - PORTRAIT_CANVAS_WIDTH / 2 + (500 - 440 * 0.5);
         const baseY = -(y / IMAGE_SAMPLE_SCALE) + PORTRAIT_CANVAS_HEIGHT / 2;
         const baseZ = -randomBetween(4, 28);
-        const vertex = new three.Vector3(baseX, baseY, baseZ) as OverlayVertex;
+        const vertex = new THREE.Vector3(baseX, baseY, baseZ) as OverlayVertex;
         vertex.baseX = baseX;
         vertex.baseY = baseY;
         vertex.baseZ = baseZ;
@@ -326,12 +328,12 @@ export function mountReferenceEngine(opts: ReferenceEngineOptions) {
 
         const pixelColor = getPixel(imageData, x, y);
         const color = `rgb(${pixelColor.r}, ${pixelColor.g}, ${pixelColor.b})`;
-        geometry.colors.push(new three.Color(color));
+        geometry.colors.push(new THREE.Color(color));
         geometry.vertices.push(vertex);
       }
     }
 
-    overlayParticles = new three.Points(geometry, material);
+    overlayParticles = new THREE.Points(geometry, material);
     scene.add(overlayParticles);
   }
 
@@ -340,7 +342,7 @@ export function mountReferenceEngine(opts: ReferenceEngineOptions) {
       return;
     }
 
-    renderer = new three.WebGLRenderer({
+    renderer = new THREE.WebGLRenderer({
       canvas: canvasMain,
       antialias: false,
       alpha: true
@@ -348,8 +350,8 @@ export function mountReferenceEngine(opts: ReferenceEngineOptions) {
     renderer.setPixelRatio(dpr);
     renderer.setSize(ww, wh);
 
-    scene = new three.Scene();
-    camera = new three.OrthographicCamera(ww / -2, ww / 2, wh / 2, wh / -2, 1, 1000);
+    scene = new THREE.Scene();
+    camera = new THREE.OrthographicCamera(ww / -2, ww / 2, wh / 2, wh / -2, 1, 1000);
     camera.position.set(0, -20, 4);
     camera.lookAt(centerVector);
     camera.zoom = 1;
